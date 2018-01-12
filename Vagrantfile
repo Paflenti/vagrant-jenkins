@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network "forwarded_port", guest: 8080, host: 8082
-  config.vm.network "forwarded_port", guest: 80, host: 8083
+  #config.vm.network "forwarded_port", guest: 80, host: 8083
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -68,11 +68,11 @@ Vagrant.configure("2") do |config|
   # #               Managed by Puppet.\n"
   # # }
   #
-  config.vm.provision :puppet do |puppet|
-    puppet.manifests_path = "manifests"
-    puppet.manifest_file  = "init.pp"
-    puppet.module_path = "manifests/modules"
-  end
+  #config.vm.provision :puppet do |puppet|
+   # puppet.manifests_path = "manifests"
+    #puppet.manifest_file  = "init.pp"
+    #puppet.module_path = "manifests/modules"
+  #end
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
@@ -134,6 +134,19 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
    echo "\n----- Installing Java 8 ------\n"
    yum -y install java-1.8.0-openjdk
+   echo "\n----- Installing Jenkins ------\n"
+   wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+   rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+   yum -y install jenkins
+   echo "\n----- Starting Jenkins ------\n"
+   service jenkins start
+   service jenkins status
+   echo "\n----- firewall client ------\n"
+   iptables -I INPUT -p tcp -m tcp --dport 8080 -j ACCEPT
+   service iptables save
+   echo "\n----- Now you will be able to access the guest's Jenkins at the address http://localhost:8082 ------\n"
+   
+   
   SHELL
 
 end
