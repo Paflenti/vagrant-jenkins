@@ -130,5 +130,11 @@ Vagrant.configure("2") do |config|
   config.trigger.after [:halt, :destroy] do
     system("sudo pfctl -df /etc/pf.conf > /dev/null 2>&1; echo '==> Removing Port Forwarding & Disabling pf'")
   end
+  
+  config.vm.provision "shell", inline: <<-SHELL
+   echo "\n----- Installing Java 8 ------\n"
+   yum -y install java-1.8.0-openjdk
+  SHELL
 
 end
+
