@@ -14,7 +14,7 @@ This is meant to be used with Vagrant and Virtual Box to set up a Jenkins server
 For an initial deployment:
 
  * Install *the latest version* of [VirtualBox](https://www.virtualbox.org/wiki/Downloads) on your computer (if your VM fails to boot, especially after upgrading your OS, please upgrade your copy of VirtualBox).
- * Install Vagrant on your computer (https://www.vagrantup.com/)
+ * Install Vagrant on your computer [Vagrant](https://www.vagrantup.com/)
  
 Type the following command, from the root of this directory (`vagrant-jenkins`):
 
