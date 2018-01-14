@@ -5,25 +5,24 @@
 VAGRANT-JENKINS
 ===============
 
-By [Albert Albala (alberto56)](https://drupal.org/user/245583).
+By [Albert Albala (alberto56)](https://drupal.org/user/245583), with amendments and additional settings from (Paflenti)
 
-*A quick, automated way to deploy a Jenkins server tuned specifically for Drupal developers; Uses puppet to configure the server; Can be used with or without vagrant to provision any server (whether or not it's a VM on your local machine). The Jenkins server then created will be able to monitor your Drupal sites' code. Please see [Dcycle project](http://dcycleproject.org) for some best practices.*
+*A quick, automated way to deploy a Jenkins server. Can be used with or without vagrant to provision any server (whether or not it's a VM on your local machine). The Jenkins server then created will be able to monitor your Drupal sites' code. Please see [Dcycle project](http://dcycleproject.org) for some best practices.*
 
-This is meant to be used with Vagrant and Virtual Box to set up a Jenkins server running on CentOS 6.x. This has been tested with Mac OS X as a host machine, but it should be possible to run this on any host system which supports Vagrant, VirtualBox and Puppet.
+This is meant to be used with Vagrant and Virtual Box to set up a Jenkins server running on CentOS 6.x. This has been tested with Windows 7 as a host machine, but it should be possible to run this on any host system which supports Vagrant, VirtualBox and Puppet.
 
 For an initial deployment:
 
- * Install *the latest version* of [VirtualBox](https://www.virtualbox.org/wiki/Downloads) on your computer (if your VM fails to boot, especially after upgrading your OS, please upgrade your copy of VirtualBox). For more information see [this issue](https://github.com/alberto56/vagrant-jenkins/issues/11).
- * Install Vagrant on your computer
- * Install Puppet on your computer
-
+ * Install *the latest version* of [VirtualBox](https://www.virtualbox.org/wiki/Downloads) on your computer (if your VM fails to boot, especially after upgrading your OS, please upgrade your copy of VirtualBox).
+ * Install Vagrant on your computer (https://www.vagrantup.com/)
+ 
 Type the following command, from the root of this directory (`vagrant-jenkins`):
 
     vagrant up
 
-You might have to wait for about an hour while all the relevant files are downloaded. Once the base box is already installed, it will take less time.
+You might have to wait for few minutes while all the relevant files are downloaded. Once the base box is already installed, it will take less time.
 
-Once your box is running, and assuming no other applications (including other instances of the same box code) use port 8082, you will be able to access the guest's Jenkins at the address http://localhost:8082, and the guest's webserver at http://localhost:8083. **See "Note to OS X Yosemite 10.10 users", below, if port forwarding is not working on your Yosemite machine.
+Once your box is running, and assuming no other applications (including other instances of the same box code) use port 8082, you will be able to access the guest's Jenkins at the address http://localhost:8082,
 
 For an incremental deployment (if you've already deployed a previous version of this, which you want to update):
 
@@ -36,58 +35,8 @@ You can then log into your box:
 
     vagrant ssh
 
-Note to OS X Yosemite 10.10 users
----------------------------------
 
-For using a vagrant box on Mac OS 10.10 Yosemite, we are using [this technique](https://www.danpurdy.co.uk/web-development/osx-yosemite-port-forwarding-for-vagrant/) which might require you to install `vagrant-triggers` on your machine:
-
-    vagrant plugin install vagrant-triggers
-
-Provisioning remote VMs (without Vagrant)
------------------------------------------
-
-Now that we have a relatively viable recipe to install Jenkins, I tried provisioning a remote VM hosted on [Digital Ocean](https://www.digitalocean.com). To do that I first created a CentOS VM (note: I only tested this with CentOS 6.4 and it is known to _not_ work on CentOS 7), and then, on it, I enabled the puppetlabs repo and installed puppet:
-
-    sudo rpm -ivh https://yum.puppetlabs.com/el/6/products/x86_64/puppetlabs-release-6-7.noarch.rpm
-    sudo yum install puppet
-
-Now, I downloaded my [Vagrant-Puppet scripts](https://github.com/alberto56/vagrant-jenkins) and ran them:
-
-    cd
-    yum install git
-    git clone https://github.com/alberto56/vagrant-jenkins.git
-    cd ~/vagrant-jenkins/manifests/
-    yum install ruby
-    yum install rubygems
-    gem install puppet
-
-Now add the module path to your puppet conf:
-
-    vi /etc/puppet/puppet.conf
-
-And add the following line to main:
-
-    modulepath = /root/vagrant-jenkins/manifests/modules
-
-Now it should be possible to apply the puppet manifest:
-
-    puppet apply --verbose ~/vagrant-jenkins/manifests/init.pp
-
-Notes
------
-
- * This is a work in progress, make sure you are familiar with [the project issue queue](https://github.com/alberto56/vagrant-jenkins/issues) to avoid frustration.
-
- * I can't get [SSH agent forwarding](https://github.com/alberto56/vagrant-jenkins/issues/5) to work, so for now I am creating an SSH key pair on my guest.
-
-To do this:
-
-    vagrant ssh # log into vagrant box
-    sudo su -s /bin/bash jenkins # login as jenkins user
-    ssh-keygen -t rsa -C "jenkins@example.com" # generate ssh key pair
-    # press enter to all following questions
-    cat ~/.ssh/id_rsa.pub # this is your public key
-
+ 
 It is a good idea to change the MySQL root password. You can call this:
 
     mysqladmin -u root -p'CHANGEME' password 'princess'
@@ -103,7 +52,7 @@ Note finally that by default Jenkins is not using a password; *you will want to 
 Setting up a password on Jenkins
 --------------------------------
 
-At first Jenkins has no security, meaning any user can do anything even without being logged in. I have been using Jenkins for years and every time I set up a server I this (*what not to do*):
+At first Jenkins has no security, meaning any user can do anything even without being logged in.
 
  * Go to Manage Jenkins > Global security
  * Check "Logged in users can do anything"
@@ -213,9 +162,3 @@ Troubleshooting
 
  * Please see the [issue queue](https://github.com/alberto56/vagrant-jenkins/issues) if you are having troubles, and add a new issue if you don't find what you are looking for.
 
-Fun add-ons
------------
-
-Here are some things I'd like to add to puppet but haven't gotten around to yet:
-
- * [Phantomjs for screenshots](http://www.sameerhalai.com/blog/how-to-install-phantomjs-on-a-centos-server/), this allows your Jenkins job to take a screenshot of your website's home page as viewed by an anonymous user, and save the artifact for later use. This can be a nice visual incentive for convincing your co-workers, boss or client to adopt continuous integration.
