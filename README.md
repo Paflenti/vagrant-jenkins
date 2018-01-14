@@ -9,7 +9,7 @@ By [Albert Albala (alberto56)](https://drupal.org/user/245583), with amendments 
 
 *A quick, automated way to deploy a Jenkins server. Can be used with or without vagrant to provision any server (whether or not it's a VM on your local machine). The Jenkins server then created will be able to monitor your Drupal sites' code. Please see [Dcycle project](http://dcycleproject.org) for some best practices.*
 
-This is meant to be used with Vagrant and Virtual Box to set up a Jenkins server running on CentOS 6.x. This has been tested with Windows 7 as a host machine, but it should be possible to run this on any host system which supports Vagrant, VirtualBox and Puppet.
+This is meant to be used with Vagrant and Virtual Box to set up a Jenkins server running on CentOS 6.x. This has been tested with Windows 7 as a host machine, but it should be possible to run this on any host system which supports Vagrant and VirtualBox.
 
 For an initial deployment:
 
@@ -160,5 +160,5 @@ Note that if you need more verbose results on the command line test run, for exa
 Troubleshooting
 ---------------
 
- * Please see the [issue queue](https://github.com/alberto56/vagrant-jenkins/issues) if you are having troubles, and add a new issue if you don't find what you are looking for.
+ * Please see the [issue queue](https://github.com/Paflenti/vagrant-jenkins/issues) if you are having troubles, and add a new issue if you don't find what you are looking for.
 
