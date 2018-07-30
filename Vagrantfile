@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   config.vm.network "forwarded_port", guest: 8080, host: 8082
-         
+
   # See http://stackoverflow.com/questions/11955525
   Vagrant::Config.run do |config|
     config.ssh.private_key_path = "~/.ssh/id_rsa"
@@ -37,11 +37,15 @@ Vagrant.configure("2") do |config|
   config.trigger.after [:halt, :destroy] do
     system("sudo pfctl -df /etc/pf.conf > /dev/null 2>&1; echo '==> Removing Port Forwarding & Disabling pf'")
   end
-  
+
   #Using shell
   config.vm.provision "shell", inline: <<-SHELL
    echo "\n----- Installing Java 8 ------\n"
    yum -y install java-1.8.0-openjdk
+   echo "\n------Installing Docker------\n"
+   rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+   yum update -y
+   yum -y install docker-io
    echo "\n----- Installing Jenkins ------\n"
    wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
    rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
@@ -53,9 +57,8 @@ Vagrant.configure("2") do |config|
    iptables -I INPUT -p tcp -m tcp --dport 8080 -j ACCEPT
    service iptables save
    echo "\n----- Now you will be able to access the guest's Jenkins at the address http://localhost:8082 ------\n"
-   
-   
+
+
   SHELL
 
 end
-
