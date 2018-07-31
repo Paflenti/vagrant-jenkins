@@ -42,10 +42,10 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
    echo "\n----- Installing Java 8 ------\n"
    yum -y install java-1.8.0-openjdk
-   echo "\n------Installing Docker------\n"
-   rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-   yum update -y
-   yum -y install docker-io
+   #echo "\n------Installing Docker------\n"
+   #rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+   #yum update -y
+   #yum -y install docker-io
    echo "\n----- Installing Jenkins ------\n"
    wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
    rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
